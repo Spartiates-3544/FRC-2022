@@ -4,6 +4,7 @@
 
 package frc.robot.subsystems;
 
+import com.ctre.phoenix.motorcontrol.TalonFXSimCollection;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.sensors.CANCoder;
 import com.kauailabs.navx.frc.AHRS;
@@ -56,6 +57,10 @@ public class DrivetrainSubsystem extends SubsystemBase {
       drive.setDeadband(0.1); //Deadzone
       feedforward = new SimpleMotorFeedforward(Constants.DriveConstants.kS, Constants.DriveConstants.kV, Constants.DriveConstants.kA);
       ramp = new SlewRateLimiter(Constants.DriveConstants.RAMPINGUNITSPERSECOND);
+
+      //Sim stuff
+      TalonFXSimCollection FXsim1 = left1.getSimCollection();
+      
   }
 
   @Override
