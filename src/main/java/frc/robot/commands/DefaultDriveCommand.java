@@ -24,14 +24,16 @@ public class DefaultDriveCommand extends CommandBase {
 
   @Override
   public void initialize() {
-    m_drivetrain.setMaxOutput(50);
+    m_drivetrain.setMaxOutput(0.5);
   }
 
   @Override
   public void execute() {   
-        //m_drivetrain.arcadeDrive(ramp.calculate(m_controller.getLeftY()), m_controller.getLeftTriggerAxis() - m_controller.getRightTriggerAxis());
+        m_drivetrain.arcadeDrive(m_controller.getLeftY(), m_controller.getLeftTriggerAxis() - m_controller.getRightTriggerAxis());
+        /*
         var speeds = DifferentialDrive.arcadeDriveIK(m_controller.getLeftY(), m_controller.getLeftTriggerAxis() - m_controller.getRightTriggerAxis(), true);
         m_drivetrain.tankDriveWithFeedForward(speeds.left * Constants.DriveConstants.maxMetersPerSecond, speeds.right * Constants.DriveConstants.maxMetersPerSecond);
+        */
   } 
 
   @Override
