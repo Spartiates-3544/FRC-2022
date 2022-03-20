@@ -22,8 +22,8 @@ public final class Constants {
         public static int RIGHTDRIVEPORT1 = 3;
         public static int RIGHTDRIVEPORT2 = 4;
         public static int RIGHTDRIVEPORT3 = 5;
-        public static int LEFTENCODERPORT = 0; //TODO CHANGE
-        public static int RIGHTENCODERPORT = 0; //TODO CHANGE
+        public static int LEFTENCODERPORT = 0; 
+        public static int RIGHTENCODERPORT = 1; 
         public static double RAMPINGUNITSPERSECOND = 3; //TODO TEST
         public static double kS = 0;
         public static double kV = 0;
@@ -35,12 +35,12 @@ public final class Constants {
     }
 
     public final static class IndexorConstants {
-        public static int INDEXORMOTORPORT = 0; //TODO
+        public static int INDEXORMOTORPORT = 20; //TODO
     }
 
     public final static class ShooterConstants {
-        public static int LOWERMOTORPORT = 0; //TODO
-        public static int UPPERMOTORPORT = 0; //TODO
+        public static int LOWERMOTORPORT = 9;
+        public static int UPPERMOTORPORT = 4; 
         public static double kS = 0; //TODO
         public static double kV = 0; //TODO to calculate values: https://www.reca.lc/flywheel
         public static double kA = 0; //TODO
