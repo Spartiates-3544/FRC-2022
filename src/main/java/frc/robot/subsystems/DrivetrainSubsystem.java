@@ -7,18 +7,29 @@ package frc.robot.subsystems;
 import com.ctre.phoenix.motorcontrol.TalonFXSimCollection;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.sensors.CANCoder;
+import com.ctre.phoenix.sensors.CANCoderSimCollection;
 import com.kauailabs.navx.frc.AHRS;
 
 import frc.robot.Constants;
+import frc.robot.Robot;
+import edu.wpi.first.hal.SimDouble;
+import edu.wpi.first.hal.simulation.SimDeviceDataJNI;
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
+import edu.wpi.first.math.system.plant.DCMotor;
+import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.RobotBase;
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
+import edu.wpi.first.wpilibj.simulation.DifferentialDrivetrainSim;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -39,6 +50,18 @@ public class DrivetrainSubsystem extends SubsystemBase {
     private SimpleMotorFeedforward feedforward;
     private SlewRateLimiter ramp;
 
+    //sim
+    private Field2d m_field;
+    private TalonFXSimCollection FXsim1;
+    private TalonFXSimCollection FXsim2;
+    private TalonFXSimCollection FXsim3;
+    private TalonFXSimCollection FXsim4;
+    private TalonFXSimCollection FXsim5;
+    private TalonFXSimCollection FXsim6;
+    private CANCoderSimCollection canSimRight;
+    private CANCoderSimCollection canSimLeft;
+    private DifferentialDrivetrainSim m_driveSim;
+
   public DrivetrainSubsystem() {
       left1 = new WPI_TalonFX(Constants.DriveConstants.LEFTDRIVEPORT1);
       left2 = new WPI_TalonFX(Constants.DriveConstants.LEFTDRIVEPORT2);
@@ -50,29 +73,76 @@ public class DrivetrainSubsystem extends SubsystemBase {
       right = new MotorControllerGroup(right1, right2, right3);
       right.setInverted(true);
       drive = new DifferentialDrive(left, right);
-      gyro = new AHRS(SPI.Port.kMXP);
+      gyro = new AHRS(SPI.Port.kOnboardCS0);
       leftEncoder = new CANCoder(Constants.DriveConstants.LEFTENCODERPORT); 
       rightEncoder = new CANCoder(Constants.DriveConstants.RIGHTENCODERPORT); //TODO CHECK IF I NEED TO REVERSE THE SENSOR DIRECTION https://oldsite.ctr-electronics.com/downloads/api/java/html/classcom_1_1ctre_1_1phoenix_1_1sensors_1_1_c_a_n_coder_configuration.html
       odometry = new DifferentialDriveOdometry(gyro.getRotation2d());
-      drive.setDeadband(0.1); //Deadzone
       feedforward = new SimpleMotorFeedforward(Constants.DriveConstants.kS, Constants.DriveConstants.kV, Constants.DriveConstants.kA);
       ramp = new SlewRateLimiter(Constants.DriveConstants.RAMPINGUNITSPERSECOND);
+      m_field = new Field2d();
+      SmartDashboard.putData("Field", m_field);
 
       //Sim stuff
-      TalonFXSimCollection FXsim1 = left1.getSimCollection();
-      
+      if (RobotBase.isSimulation()) {
+        FXsim1 = left1.getSimCollection();
+        FXsim2 = left2.getSimCollection();
+        FXsim3 = left3.getSimCollection();
+        FXsim4 = right1.getSimCollection();
+        FXsim5 = right2.getSimCollection();
+        FXsim6 = right3.getSimCollection();
+        canSimLeft = leftEncoder.getSimCollection();
+        canSimRight= rightEncoder.getSimCollection();
+  
+        // Create the simulation model of our drivetrain.
+        m_driveSim = new DifferentialDrivetrainSim(
+          DCMotor.getFalcon500(3), // 3 Falcon motors on each side of the drivetrain.
+          5.38,                    // 5.38:1 gearing reduction.
+          7.5,                     // MOI of 7.5 kg m^2 (from CAD model).
+          60.0,                    // The mass of the robot is 60 kg.
+          Units.inchesToMeters(3), // The robot uses 3" radius wheels.
+          Constants.DriveConstants.kTrackwidthMeters,                  // The track width is 0.4572 meters.
+  
+          // The standard deviations for measurement noise:
+          // x and y:          0.001 m
+          // heading:          0.001 rad
+          // l and r velocity: 0.1   m/s
+          // l and r position: 0.005 m
+          VecBuilder.fill(0.001, 0.001, 0.001, 0.1, 0.1, 0.005, 0.005));
+      }      
   }
 
   @Override
   public void periodic() {
     odometry.update(gyro.getRotation2d(), getLeftEncoderDistanceMeters(), getRightEncoderDistanceMeters());
-    SmartDashboard.putData(gyro);
+    SmartDashboard.putNumber("Angle", gyro.getAngle());
     SmartDashboard.putNumber("Speed", getAverageWheelSpeedsDouble());
     SmartDashboard.putNumber("Distance travelled", getAverageEncoderDistanceMeters());
+    m_field.setRobotPose(getPose());
+  }
+
+  @Override
+  public void simulationPeriodic() {
+    FXsim1.setBusVoltage(RobotController.getBatteryVoltage());
+    FXsim2.setBusVoltage(RobotController.getBatteryVoltage());
+    FXsim3.setBusVoltage(RobotController.getBatteryVoltage());
+    FXsim4.setBusVoltage(RobotController.getBatteryVoltage());
+    FXsim5.setBusVoltage(RobotController.getBatteryVoltage());
+    FXsim6.setBusVoltage(RobotController.getBatteryVoltage());
+    m_driveSim.setInputs(left.get() * RobotController.getBatteryVoltage(), right.get() * RobotController.getBatteryVoltage());
+    m_driveSim.update(0.02);
+    canSimLeft.setRawPosition(distanceToNativeUnits(m_driveSim.getLeftPositionMeters()));
+    canSimRight.setRawPosition(distanceToNativeUnits(-m_driveSim.getRightPositionMeters()));
+    canSimLeft.setVelocity(velocityToNativeUnits(m_driveSim.getLeftVelocityMetersPerSecond()));
+    canSimRight.setVelocity(velocityToNativeUnits(-m_driveSim.getRightVelocityMetersPerSecond()));
+    int dev = SimDeviceDataJNI.getSimDeviceHandle("navX-Sensor[0]");
+    SimDouble angle = new SimDouble(SimDeviceDataJNI.getSimValueHandle(dev, "Yaw"));
+    SimDouble rate = new SimDouble(SimDeviceDataJNI.getSimValueHandle(dev, "Rate"));
+    angle.set(m_driveSim.getHeading().getDegrees());
+    rate.set(m_driveSim.getHeading().getDegrees() * 50);
   }
 
   public void arcadeDrive(double fwd, double rot) {
-    drive.arcadeDrive(fwd, rot);
+    drive.arcadeDrive(ramp.calculate(fwd), rot);
 }
 
 public void setMaxOutput(double maxOutput) {
@@ -136,6 +206,9 @@ public Pose2d getPose() {
 public void resetOdometry(Pose2d pose) {
   resetEncoders();
   odometry.resetPosition(pose, gyro.getRotation2d());
+  if (RobotBase.isSimulation()) {
+    m_driveSim.setPose(pose);
+  }
 }
 
 public void resetEncoders() {
@@ -157,5 +230,18 @@ public CANCoder getRightEncoder() {
 
 public double getTurnRate() {
   return -gyro.getRate();
+}
+
+private int distanceToNativeUnits(double positionMeters){
+  double wheelRotations = positionMeters/(2 * Math.PI * Units.inchesToMeters(3));
+  int sensorCounts = (int)(wheelRotations * 4096);
+  return sensorCounts;
+}
+
+private int velocityToNativeUnits(double velocityMetersPerSecond){
+  double wheelRotationsPerSecond = velocityMetersPerSecond/(2 * Math.PI * Units.inchesToMeters(3));
+  double wheelRotationsPer100ms = wheelRotationsPerSecond / 10;
+  int sensorCountsPer100ms = (int)(wheelRotationsPer100ms * 4096);
+  return sensorCountsPer100ms;
 }
 }
