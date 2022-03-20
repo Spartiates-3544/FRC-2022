@@ -80,6 +80,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
       feedforward = new SimpleMotorFeedforward(Constants.DriveConstants.kS, Constants.DriveConstants.kV, Constants.DriveConstants.kA);
       ramp = new SlewRateLimiter(Constants.DriveConstants.RAMPINGUNITSPERSECOND);
       m_field = new Field2d();
+      SmartDashboard.putData("Field", m_field);
 
       //Sim stuff
       if (RobotBase.isSimulation()) {
@@ -91,7 +92,6 @@ public class DrivetrainSubsystem extends SubsystemBase {
         FXsim6 = right3.getSimCollection();
         canSimLeft = leftEncoder.getSimCollection();
         canSimRight= rightEncoder.getSimCollection();
-        SmartDashboard.putData("Field", m_field);
   
         // Create the simulation model of our drivetrain.
         m_driveSim = new DifferentialDrivetrainSim(
@@ -117,10 +117,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("Angle", gyro.getAngle());
     SmartDashboard.putNumber("Speed", getAverageWheelSpeedsDouble());
     SmartDashboard.putNumber("Distance travelled", getAverageEncoderDistanceMeters());
-    
-    if (RobotBase.isSimulation()) {
-      m_field.setRobotPose(getPose());
-    }
+    m_field.setRobotPose(getPose());
   }
 
   @Override
