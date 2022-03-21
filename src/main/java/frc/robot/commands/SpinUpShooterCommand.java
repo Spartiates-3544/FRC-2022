@@ -27,10 +27,11 @@ public class SpinUpShooterCommand extends CommandBase {
 
   @Override
   public void execute() {
-    //TODO SET SHOOTER MOTORS TO COAST MODE, BANGBANG CONTROLLER WILL BREAK MOTORS OTHERWISE
+    //TODO SET SHOOTER MOTORS TO COAST MODE, BANGBANG CONTROLLER WILL DAMAGE MOTORS OTHERWISE
     //Setting voltage because feedforward units are in volts
+    //shooter.setMotorsVoltage(MathUtil.clamp( (bangbang.calculate(shooterMetersPerSec, targetVelocity) * 12 ) + 0.9 * feedforward.calculate(targetVelocity), 0, 12));
     double shooterMetersPerSec = ( ( shooter.getAverageShooterVelocity() / 2048 ) * 0.3048 ) * 10;
-    shooter.setMotorsVoltage(MathUtil.clamp( (bangbang.calculate(shooterMetersPerSec, targetVelocity) * 12 ) + 0.9 * feedforward.calculate(targetVelocity), 0, 12));
+    shooter.setMotors(bangbang.calculate(shooterMetersPerSec, targetVelocity));
   }
 
   @Override

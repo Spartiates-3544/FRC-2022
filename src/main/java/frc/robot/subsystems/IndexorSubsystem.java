@@ -24,4 +24,11 @@ public class IndexorSubsystem extends SubsystemBase {
   public void setPourcentage(double pourcentage) {
     indexor.set(ControlMode.PercentOutput, pourcentage);
   }
+
+  public void activate(boolean on) {
+    if (on) {
+      setPourcentage(30);
+    }
+    setPourcentage(0);
+  }
 }

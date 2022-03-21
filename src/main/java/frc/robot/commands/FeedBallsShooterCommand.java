@@ -8,18 +8,18 @@ import frc.robot.subsystems.IndexorSubsystem;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 /** An example command that uses an example subsystem. */
-public class RunIndexorCommand extends CommandBase {
+public class FeedBallsShooterCommand extends CommandBase {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
-  private final IndexorSubsystem m_Indexor;
+  private final IndexorSubsystem indexor;
 
   /**
    * Creates a new ExampleCommand.
    *
    * @param subsystem The subsystem used by this command.
    */
-  public RunIndexorCommand(IndexorSubsystem subsystem) {
-    m_Indexor = subsystem;
-    addRequirements(subsystem);
+  public FeedBallsShooterCommand(IndexorSubsystem indexor) {
+    this.indexor = indexor;
+    addRequirements(indexor);
   }
 
   // Called when the command is initially scheduled.
@@ -29,13 +29,13 @@ public class RunIndexorCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_Indexor.setPourcentage(10);
+      indexor.activate(true);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    m_Indexor.setPourcentage(0);
+      indexor.activate(false);
   }
 
   // Returns true when the command should end.

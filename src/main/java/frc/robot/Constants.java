@@ -24,7 +24,7 @@ public final class Constants {
         public static int RIGHTDRIVEPORT3 = 5;
         public static int LEFTENCODERPORT = 0;
         public static int RIGHTENCODERPORT = 1;
-        public static double RAMPINGUNITSPERSECOND = 10; //TODO TEST
+        public static double RAMPINGUNITSPERSECOND = 3; //TODO TEST
         public static double kS = 0.22;
         public static double kV = 1.98;
         public static double kA = 0.2;
@@ -58,5 +58,14 @@ public final class Constants {
         public static double limelightHeight = 0; //TODO
         public static double targetHeight = 104;
         public static double limelightMountingAngle = 0; //TODO
+    }
+
+    //TODO
+    public final static class TurretConstants {
+        public static int TURRETMOTORPORT = 0;
+        public static int LEFTLIMITCHANNEL = 0;
+        public static int RIGHTLIMITCHANNEL = 0;
+        public static double kP = 0.1;
+        public static double minPourcentage = 0.02;
     }
 }
