@@ -63,10 +63,11 @@ public final class Constants {
     //TODO
     public final static class TurretConstants {
         public static int TURRETMOTORPORT = 0;
-        public static int LEFTLIMITCHANNEL = 0;
-        public static int RIGHTLIMITCHANNEL = 0;
+        public static int LIMITCHANNEL = 0;
         public static double kP = 0.1;
         public static double minPourcentage = 0.02;
+        public static double RightLimitTicks = 0; //TODO
+        public static double LeftLimitTicks = 0; //TODO
     }
 
     //TODO

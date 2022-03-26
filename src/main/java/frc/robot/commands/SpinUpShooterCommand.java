@@ -12,14 +12,14 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 public class SpinUpShooterCommand extends CommandBase {
 
   private BangBangController bangbang;
-  private SimpleMotorFeedforward feedforward;
+  //private SimpleMotorFeedforward feedforward;
   double targetVelocity;
   ShooterSubsystem shooter;
 
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
   public SpinUpShooterCommand(double targetVelocity, ShooterSubsystem shooter) {
     bangbang = new BangBangController();
-    feedforward = new SimpleMotorFeedforward(Constants.ShooterConstants.kS, Constants.ShooterConstants.kV, Constants.ShooterConstants.kA);
+    //feedforward = new SimpleMotorFeedforward(Constants.ShooterConstants.kS, Constants.ShooterConstants.kV, Constants.ShooterConstants.kA);
     this.targetVelocity = targetVelocity;
     this.shooter = shooter;
     addRequirements(shooter);

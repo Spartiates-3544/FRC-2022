@@ -13,7 +13,6 @@ import edu.wpi.first.math.controller.RamseteController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
@@ -30,8 +29,10 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.DefaultDriveCommand;
 import frc.robot.commands.FeedBallsShooterCommand;
 import frc.robot.commands.SpinUpShooterCommand;
+import frc.robot.commands.ToggleIntakeCommand;
 import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.subsystems.IndexorSubsystem;
+import frc.robot.subsystems.IntakeSubsystem;
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
  * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
@@ -44,6 +45,7 @@ public class RobotContainer {
   private final DrivetrainSubsystem m_drivetrain = new DrivetrainSubsystem();
   private final ShooterSubsystem m_shooter = new ShooterSubsystem();
   private final IndexorSubsystem m_indexor = new IndexorSubsystem();
+  private final IntakeSubsystem m_intake = new IntakeSubsystem();
   private final XboxController m_controller = new XboxController(0);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
@@ -65,7 +67,7 @@ public class RobotContainer {
         new SequentialCommandGroup(new WaitCommand(2.5), new FeedBallsShooterCommand(m_indexor))), 
         true);
 
-
+    new JoystickButton(m_controller, Button.kB.value).whenPressed(new ToggleIntakeCommand(m_intake));
   }
 
   /**
