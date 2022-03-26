@@ -19,7 +19,7 @@ public class ShooterSubsystem extends SubsystemBase {
   public ShooterSubsystem() {
       upper = new WPI_TalonFX(Constants.ShooterConstants.UPPERMOTORPORT);
       lower = new WPI_TalonFX(Constants.ShooterConstants.LOWERMOTORPORT);
-/*       bangbang = new BangBangController();
+/*    bangbang = new BangBangController();
       feedforward = new SimpleMotorFeedforward(Constants.ShooterConstants.kS, Constants.ShooterConstants.kV, Constants.ShooterConstants.kA); */
   }
 

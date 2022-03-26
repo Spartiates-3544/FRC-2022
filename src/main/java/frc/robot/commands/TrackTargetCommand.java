@@ -43,7 +43,16 @@ public class TrackTargetCommand extends CommandBase {
           }
           turret.setTurret(steeringAdjust);
       }
-      turret.setTurret(0);
+
+      /*
+      if (turret.getLeftLimitSwitch().get()) {
+        turret.setTurret(-0.2);
+      }
+
+      if (turret.getRightLimitSwitch().get()) {
+        turret.setTurret(0.2);
+      }
+      */
   }
 
   // Called once the command ends or is interrupted.

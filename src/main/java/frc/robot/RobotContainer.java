@@ -62,7 +62,7 @@ public class RobotContainer {
   private void configureButtonBindings() {
     new JoystickButton(m_controller, Button.kA.value).toggleWhenPressed(
         new ParallelCommandGroup(new SpinUpShooterCommand(10, m_shooter), //TODO make the velocity decision automatic
-        new SequentialCommandGroup(new WaitCommand(5), new FeedBallsShooterCommand(m_indexor))), 
+        new SequentialCommandGroup(new WaitCommand(2.5), new FeedBallsShooterCommand(m_indexor))), 
         true);
 
 

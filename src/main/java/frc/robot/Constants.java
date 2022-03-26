@@ -68,4 +68,10 @@ public final class Constants {
         public static double kP = 0.1;
         public static double minPourcentage = 0.02;
     }
+
+    //TODO
+    public final static class IntakeConstants {
+        public static int INTAKEMOTORPORT = 0; 
+        public static int PCMPORT = 0;
+    }
 }

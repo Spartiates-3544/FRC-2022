@@ -8,7 +8,7 @@ import frc.robot.Constants;
 public class Limelight {
     private static final double targetHeight = Constants.VisionConstants.targetHeight;
     private static final double limelightHeight = Constants.VisionConstants.limelightHeight;
-    private static final double limelightMountingAngle = Constants.VisionConstants.limelightMountingAngle; //a1
+    private static final double limelightMountingAngle = Constants.VisionConstants.limelightMountingAngle;
 
     NetworkTable limelight = NetworkTableInstance.getDefault().getTable("limelight");
 
