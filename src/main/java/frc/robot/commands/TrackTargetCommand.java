@@ -15,6 +15,7 @@ public class TrackTargetCommand extends CommandBase {
   private final TurretSubsystem turret;
   private final Limelight limelight;
   private double steeringAdjust;
+  private double horizontalOffset;
 
   /**
    * Creates a new ExampleCommand.
@@ -24,6 +25,7 @@ public class TrackTargetCommand extends CommandBase {
   public TrackTargetCommand(TurretSubsystem turret) {
     this.turret = turret;
     limelight = new Limelight();
+    horizontalOffset = limelight.getHorizontalOffset();
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(turret);
   }
@@ -37,9 +39,9 @@ public class TrackTargetCommand extends CommandBase {
   public void execute() {
       if (limelight.hasTarget()) {
           if (limelight.getHorizontalOffset() > 1) {
-              steeringAdjust = Constants.TurretConstants.kP * limelight.getHorizontalOffset() - Constants.TurretConstants.minPourcentage;
+              steeringAdjust = Constants.TurretConstants.kP * horizontalOffset - Constants.TurretConstants.minPourcentage;
           } else if (limelight.getHorizontalOffset() < 1) {
-              steeringAdjust = Constants.TurretConstants.kP * limelight.getHorizontalOffset() + Constants.TurretConstants.minPourcentage;
+              steeringAdjust = Constants.TurretConstants.kP * horizontalOffset + Constants.TurretConstants.minPourcentage;
           }
           turret.setTurret(steeringAdjust);
       }
