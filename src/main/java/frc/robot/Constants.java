@@ -64,7 +64,7 @@ public final class Constants {
     public final static class TurretConstants {
         public static int TURRETMOTORPORT = 8;
         public static int LIMITCHANNEL = 0;
-        public static double kP = 0.2;
+        public static double kP = 0.0001;
         public static double kI = 0;
         public static double kD = 0;
         public static double kPEncoder = 0.0001;
@@ -78,6 +78,6 @@ public final class Constants {
     //TODO
     public final static class IntakeConstants {
         public static int INTAKEMOTORPORT = 0; 
-        public static int PCMPORT = 0;
+        public static int PCMPORT = 12; //TODO
     }
 }

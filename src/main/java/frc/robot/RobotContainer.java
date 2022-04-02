@@ -71,7 +71,7 @@ public class RobotContainer {
         new SequentialCommandGroup(new WaitCommand(2.5), new FeedBallsShooterCommand(m_indexor))), 
         true);
 
-    new JoystickButton(m_controller, Button.kB.value).whenPressed(new ToggleIntakeCommand(m_intake));
+    new JoystickButton(m_controller, Button.kB.value).toggleWhenPressed(new ToggleIntakeCommand(m_intake));
   }
 
   /**

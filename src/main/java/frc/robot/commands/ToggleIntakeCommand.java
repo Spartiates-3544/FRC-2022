@@ -20,12 +20,13 @@ public class ToggleIntakeCommand extends CommandBase {
   @Override
   public void initialize() {
       intake.toggle();
+      intake.setIntake(true);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-      intake.setIntake(true);
+      
   }
 
   // Called once the command ends or is interrupted.

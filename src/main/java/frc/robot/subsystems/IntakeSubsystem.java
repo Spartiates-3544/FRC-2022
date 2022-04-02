@@ -6,6 +6,7 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
+import com.fasterxml.jackson.databind.ser.std.NumberSerializers.DoubleSerializer;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
@@ -26,11 +27,6 @@ public class IntakeSubsystem extends SubsystemBase {
     // This method will be called once per scheduler run
   }
 
-  @Override
-  public void simulationPeriodic() {
-    // This method will be called once per scheduler run during simulation
-  }
-
   public void deploy(DoubleSolenoid.Value solenoidMode) {
     solenoid.set(solenoidMode);
   }
@@ -41,7 +37,7 @@ public class IntakeSubsystem extends SubsystemBase {
 
   public void setIntake(boolean on) {
     if (on) {
-        intake.set(TalonFXControlMode.PercentOutput, 20);
+        intake.set(TalonFXControlMode.PercentOutput, 80);
     }
     intake.set(TalonFXControlMode.PercentOutput, 0);
   }
@@ -49,4 +45,5 @@ public class IntakeSubsystem extends SubsystemBase {
   public void toggle() {
       solenoid.toggle();
   }
+
 }

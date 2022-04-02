@@ -37,12 +37,14 @@ public class TurretSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("Turret encoder value", turret.getSelectedSensorPosition(0));
   }
 
+  /*
   public void encoderAutoSet(double setpoint) {
     //-148000 to 148000
     //turret.set(TalonFXControlMode.PercentOutput, encoderPid.calculate(encoderValue, setpoint));
     SmartDashboard.putNumber("Encoder PID output", MathUtil.clamp(encoderPid.calculate(turret.getSelectedSensorPosition(), setpoint), -1, 1));
     turret.set(TalonFXControlMode.PercentOutput, MathUtil.clamp(encoderPid.calculate(turret.getSelectedSensorPosition(), setpoint), -1, 1));
   }
+  */
 
   /*
   public void limelightAutoSet(double setpoint) {
@@ -73,6 +75,10 @@ public class TurretSubsystem extends SubsystemBase {
 
   public DigitalInput getLimitSwitch() {
       return limit;
+  }
+
+  public double getTurretEncoder() {
+    return turret.getSelectedSensorPosition();
   }
 
   @Override
