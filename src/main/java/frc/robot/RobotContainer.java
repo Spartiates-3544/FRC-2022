@@ -27,9 +27,13 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.DefaultDriveCommand;
+import frc.robot.commands.DriveStraightCommand;
 import frc.robot.commands.FeedBallsShooterCommand;
+import frc.robot.commands.IntakeCommand;
+import frc.robot.commands.RunIndexorCommand;
 import frc.robot.commands.SpinUpShooterCommand;
 import frc.robot.commands.ToggleIntakeCommand;
+import frc.robot.commands.TurnAngleCommand;
 import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.subsystems.IndexorSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
@@ -57,6 +61,7 @@ public class RobotContainer {
     // Configure the button bindings
     configureButtonBindings();
     m_drivetrain.setDefaultCommand(new DefaultDriveCommand(m_drivetrain, m_controller));
+    //m_intake.setDefaultCommand(new IntakeCommand(m_intake));
   }
 
   /**
@@ -66,12 +71,17 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
+    /*
     new JoystickButton(m_controller, Button.kA.value).toggleWhenPressed(
         new ParallelCommandGroup(new SpinUpShooterCommand(10, m_shooter), //TODO make the velocity decision automatic
         new SequentialCommandGroup(new WaitCommand(2.5), new FeedBallsShooterCommand(m_indexor))), 
         true);
+    */
+    new JoystickButton(m_controller, Button.kB.value).toggleWhenPressed(new IntakeCommand(m_intake), true);
+    new JoystickButton(m_controller, Button.kX.value).toggleWhenPressed(new SpinUpShooterCommand(9624, m_shooter));
+    new JoystickButton(m_controller, Button.kA.value).toggleWhenPressed(new RunIndexorCommand(m_indexor), true);
+    new JoystickButton(m_controller, Button.kY.value).toggleWhenPressed(new ParallelCommandGroup(new IntakeCommand(m_intake), new SpinUpShooterCommand(15000, m_shooter), new RunIndexorCommand(m_indexor)));
 
-    new JoystickButton(m_controller, Button.kB.value).toggleWhenPressed(new ToggleIntakeCommand(m_intake));
   }
 
   /**
@@ -131,7 +141,7 @@ public class RobotContainer {
       return ramseteCommand.andThen(() -> m_drivetrain.tankDriveVolts(0, 0));
     */
 
-        // Create a voltage constraint to ensure we don't accelerate too fast
+  /*       // Create a voltage constraint to ensure we don't accelerate too fast
         var autoVoltageConstraint =
         new DifferentialDriveVoltageConstraint(
             new SimpleMotorFeedforward(
@@ -181,7 +191,11 @@ public class RobotContainer {
     m_drivetrain.resetOdometry(exampleTrajectory.getInitialPose());
 
     // Run path following command, then stop at the end.
-    return ramseteCommand.andThen(() -> m_drivetrain.tankDriveVolts(0, 0));
+    return ramseteCommand.andThen(() -> m_drivetrain.tankDriveVolts(0, 0)); */
+
+    return new TurnAngleCommand(m_drivetrain, 90);
+
+
   }
   
 }

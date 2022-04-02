@@ -4,38 +4,40 @@
 
 package frc.robot.commands;
 
+import frc.robot.subsystems.IndexorSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
-public class ToggleIntakeCommand extends CommandBase {
+/** An example command that uses an example subsystem. */
+public class RunIndexorCommand extends CommandBase {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
-  private final IntakeSubsystem intake;
+  private final IndexorSubsystem indexor;
 
-  public ToggleIntakeCommand(IntakeSubsystem intake) {
-    this.intake = intake;
-    addRequirements(intake);
+  /**
+   * Creates a new ExampleCommand.
+   *
+   * @param subsystem The subsystem used by this command.
+   */
+  public RunIndexorCommand(IndexorSubsystem indexor) {
+    this.indexor = indexor;
+    // Use addRequirements() here to declare subsystem dependencies.
+    addRequirements(indexor);
   }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {
-      System.out.println("ToggleIntakeCommand started!");
-      intake.toggle();
-      intake.setIntake(true);
-  }
+  public void initialize() {}
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-      
+    indexor.setPourcentage(0.5);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-      System.out.println("ToggleIntakeCommand ended!");
-      intake.setIntake(false);
-      intake.toggle();
+    indexor.setPourcentage(0);
   }
 
   // Returns true when the command should end.

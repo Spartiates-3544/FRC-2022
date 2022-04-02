@@ -6,7 +6,6 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
-import com.fasterxml.jackson.databind.ser.std.NumberSerializers.DoubleSerializer;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
@@ -33,13 +32,16 @@ public class IntakeSubsystem extends SubsystemBase {
 
   public void setIntake(double pourcentage) {
       intake.set(TalonFXControlMode.PercentOutput, pourcentage);
+      intake.feed();
   }
 
   public void setIntake(boolean on) {
     if (on) {
         intake.set(TalonFXControlMode.PercentOutput, 80);
+        intake.feed();
     }
     intake.set(TalonFXControlMode.PercentOutput, 0);
+    intake.feed();
   }
 
   public void toggle() {

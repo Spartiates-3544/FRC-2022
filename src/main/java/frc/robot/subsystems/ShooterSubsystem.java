@@ -31,7 +31,16 @@ public class ShooterSubsystem extends SubsystemBase {
 
   public void setMotors(double value) {
     upper.set(value);
-    lower.set(value);
+    upper.feed();
+    lower.set(-value);
+    lower.feed();
+  }
+
+  public void setMotors(double upperValue, double lowerValue) {
+    upper.set(upperValue);
+    lower.set(-lowerValue);
+    upper.feed();
+    lower.feed();
   }
 
   public void setMotorsVoltage(double volts) {
@@ -41,5 +50,13 @@ public class ShooterSubsystem extends SubsystemBase {
 
   public double getAverageShooterVelocity() {
    return ( upper.getSelectedSensorVelocity() + lower.getSelectedSensorVelocity() ) /2;
+  }
+
+  public double getUpperShooterVelocity() {
+    return upper.getSelectedSensorVelocity();
+  }
+
+  public double getLowerShooterVelocity() {
+    return lower.getSelectedSensorVelocity();
   }
 }

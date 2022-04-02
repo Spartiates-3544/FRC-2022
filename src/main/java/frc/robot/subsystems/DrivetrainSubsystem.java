@@ -25,6 +25,7 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.SPI;
+import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
 import edu.wpi.first.wpilibj.simulation.DifferentialDrivetrainSim;
@@ -72,7 +73,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
       right = new MotorControllerGroup(right1, right2, right3);
       right.setInverted(true);
       drive = new DifferentialDrive(left, right);
-      gyro = new AHRS(SPI.Port.kOnboardCS0);
+      gyro = new AHRS(SerialPort.Port.kUSB);
       leftEncoder = new CANCoder(Constants.DriveConstants.LEFTENCODERPORT); 
       rightEncoder = new CANCoder(Constants.DriveConstants.RIGHTENCODERPORT); //TODO CHECK IF I NEED TO REVERSE THE SENSOR DIRECTION https://oldsite.ctr-electronics.com/downloads/api/java/html/classcom_1_1ctre_1_1phoenix_1_1sensors_1_1_c_a_n_coder_configuration.html
       odometry = new DifferentialDriveOdometry(gyro.getRotation2d());
@@ -142,6 +143,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
   public void arcadeDrive(double fwd, double rot) {
     drive.arcadeDrive(ramp.calculate(fwd), rot);
+    drive.feed();
 }
 
 public void setMaxOutput(double maxOutput) {
@@ -159,6 +161,7 @@ public double getAverageWheelSpeedsDouble() {
 public void setMotors(double leftSpeed, double rightSpeed) {
     left.set(leftSpeed);
     right.set(rightSpeed);
+    drive.feed();
 }
 
 public double getEncoderAverageDegrees(){
