@@ -8,6 +8,7 @@ import frc.robot.Constants;
 import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.subsystems.ExampleSubsystem;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 public class TurnAnglePIDCommand extends CommandBase {
@@ -34,7 +35,9 @@ public class TurnAnglePIDCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    drivetrain.arcadeDrive(0, PID.calculate(drivetrain.getGyroAngle(), angleDegrees));
+    //drivetrain.arcadeDrive(0, -PID.calculate(drivetrain.getGyroAngle(), angleDegrees));
+    drivetrain.setMotors(-PID.calculate(drivetrain.getGyroAngle(), angleDegrees), PID.calculate(drivetrain.getGyroAngle(), angleDegrees));
+    //SmartDashboard.putNumber("Angle PID Output", -PID.calculate(drivetrain.getGyroAngle(), angleDegrees));
   }
 
   // Called once the command ends or is interrupted.

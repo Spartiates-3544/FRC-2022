@@ -20,7 +20,12 @@ import frc.robot.commands.DriveStraightCommand;
 import frc.robot.commands.FeedBallsShooterCommand;
 import frc.robot.commands.IntakeCommand;
 import frc.robot.commands.RunIndexorCommand;
+import frc.robot.commands.SpinIntakeCommand;
 import frc.robot.commands.SpinUpShooterCommand;
+import frc.robot.commands.SpinUpShooterDistanceCommand;
+import frc.robot.commands.StartIntakeCommand;
+import frc.robot.commands.StopIntakeCommand;
+import frc.robot.commands.StopSpinningIntakeCommand;
 import frc.robot.commands.TrackTargetCommand;
 import frc.robot.commands.TurnAngleCommand;
 import frc.robot.commands.TurnAnglePIDCommand;
@@ -72,6 +77,7 @@ public class RobotContainer {
     new JoystickButton(m_controller, Button.kB.value).toggleWhenPressed(new SpinUpShooterCommand(12500, m_shooter), true);
     new JoystickButton(m_controller, Button.kX.value).toggleWhenPressed(new RunIndexorCommand(m_indexor), true);
     new JoystickButton(m_controller, Button.kY.value).toggleWhenPressed(new ParallelCommandGroup(new IntakeCommand(m_intake), new SpinUpShooterCommand(20000, m_shooter), new RunIndexorCommand(m_indexor)));
+    //new JoystickButton(m_controller, Button.kY.value).toggleWhenPressed(new IntakeCommand(m_intake));
 
   }
 
@@ -184,7 +190,53 @@ public class RobotContainer {
     // Run path following command, then stop at the end.
     return ramseteCommand.andThen(() -> m_drivetrain.tankDriveVolts(0, 0)); */
 
-    return new TurnAnglePIDCommand(m_drivetrain, 30);
+    //return new TurnAnglePIDCommand(m_drivetrain, 90);
+    
+    
+    // // Simple autonomous test
+    //    return new SequentialCommandGroup(//
+    // new StartIntakeCommand(m_intake),//
+    // new DriveStraightCommand(m_drivetrain, 1.5),//
+    // new StopIntakeCommand(m_intake)//
+    // );
+
+
+
+    // Sequance autonome pour Martin
+    return new SequentialCommandGroup(//
+            new ParallelCommandGroup(//
+              new TrackTargetCommand(m_turret).withTimeout(0.5),//
+              new SpinUpShooterCommand(12500, m_shooter).withTimeout(5),//
+              new SequentialCommandGroup(//
+                new WaitCommand(2.5),
+                new RunIndexorCommand(m_indexor).withTimeout(2)//
+              )//
+            ),//
+            //new DriveStraightCommand(m_drivetrain, -1.5),//
+            new TurnAnglePIDCommand(m_drivetrain, -90).withTimeout(1),//
+            //new WaitCommand(0.5),//
+            //new TurnAnglePIDCommand(m_drivetrain, -30),//
+            new StartIntakeCommand(m_intake),//
+            new ParallelCommandGroup(//
+              new DriveStraightCommand(m_drivetrain, 1.5),//
+              new SpinIntakeCommand(m_intake)).withTimeout(1),//
+            //new StopSpinningIntakeCommand(m_intake),//
+            new StopIntakeCommand(m_intake),//
+            new TurnAnglePIDCommand(m_drivetrain, 90).withTimeout(1),//
+            new ParallelCommandGroup(//
+              new TrackTargetCommand(m_turret).withTimeout(0.5),//
+              new SpinUpShooterCommand(17000, m_shooter).withTimeout(5),//
+              new SequentialCommandGroup(//
+                new WaitCommand(2.5),//
+                new RunIndexorCommand(m_indexor).withTimeout(2)//
+              )//
+            )//
+    );
+
+
+    
+
+
 
   }
   
