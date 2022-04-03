@@ -28,7 +28,6 @@ public class TrackTargetCommand extends CommandBase {
     this.turret = turret;
     limelight = new Limelight();
     limelightPID = new PIDController(Constants.TurretConstants.kP, Constants.TurretConstants.kI, Constants.TurretConstants.kD);
-    horizontalOffset = limelight.getHorizontalOffset();
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(turret);
   }
@@ -42,8 +41,8 @@ public class TrackTargetCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    SmartDashboard.putNumber("Limelight PID output", MathUtil.clamp(limelightPID.calculate(horizontalOffset), -1, 1));
-    turret.setTurret(MathUtil.clamp(limelightPID.calculate(limelightPID.calculate(horizontalOffset)), -1, 1));
+    SmartDashboard.putNumber("Limelight PID output", MathUtil.clamp(limelightPID.calculate(-limelight.getHorizontalOffset()), -0.5, 0.5));
+    turret.setTurret(MathUtil.clamp(limelightPID.calculate(-limelight.getHorizontalOffset()), -0.5, 0.5));
   }
 
       /*

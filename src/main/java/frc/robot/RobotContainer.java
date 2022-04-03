@@ -8,8 +8,10 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.XboxController.Button;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
@@ -19,7 +21,9 @@ import frc.robot.commands.FeedBallsShooterCommand;
 import frc.robot.commands.IntakeCommand;
 import frc.robot.commands.RunIndexorCommand;
 import frc.robot.commands.SpinUpShooterCommand;
+import frc.robot.commands.TrackTargetCommand;
 import frc.robot.commands.TurnAngleCommand;
+import frc.robot.commands.TurnAnglePIDCommand;
 import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.subsystems.IndexorSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
@@ -47,6 +51,7 @@ public class RobotContainer {
     // Configure the button bindings
     configureButtonBindings();
     m_drivetrain.setDefaultCommand(new DefaultDriveCommand(m_drivetrain, m_controller));
+   //m_turret.setDefaultCommand(new RunCommand(() -> m_turret.setTurret(m_controller.getRightX()), m_turret));
     //m_intake.setDefaultCommand(new IntakeCommand(m_intake));
   }
 
@@ -63,10 +68,10 @@ public class RobotContainer {
         new SequentialCommandGroup(new WaitCommand(2.5), new FeedBallsShooterCommand(m_indexor))), 
         true);
     */
-    new JoystickButton(m_controller, Button.kB.value).toggleWhenPressed(new IntakeCommand(m_intake), true);
-    new JoystickButton(m_controller, Button.kX.value).toggleWhenPressed(new SpinUpShooterCommand(9624, m_shooter));
-    new JoystickButton(m_controller, Button.kA.value).toggleWhenPressed(new RunIndexorCommand(m_indexor), true);
-    new JoystickButton(m_controller, Button.kY.value).toggleWhenPressed(new ParallelCommandGroup(new IntakeCommand(m_intake), new SpinUpShooterCommand(15000, m_shooter), new RunIndexorCommand(m_indexor)));
+    new JoystickButton(m_controller, Button.kA.value).toggleWhenPressed(new TrackTargetCommand(m_turret), true);
+    new JoystickButton(m_controller, Button.kB.value).toggleWhenPressed(new SpinUpShooterCommand(12500, m_shooter), true);
+    new JoystickButton(m_controller, Button.kX.value).toggleWhenPressed(new RunIndexorCommand(m_indexor), true);
+    new JoystickButton(m_controller, Button.kY.value).toggleWhenPressed(new ParallelCommandGroup(new IntakeCommand(m_intake), new SpinUpShooterCommand(20000, m_shooter), new RunIndexorCommand(m_indexor)));
 
   }
 
@@ -179,8 +184,7 @@ public class RobotContainer {
     // Run path following command, then stop at the end.
     return ramseteCommand.andThen(() -> m_drivetrain.tankDriveVolts(0, 0)); */
 
-    return new TurnAngleCommand(m_drivetrain, 90);
-
+    return new TurnAnglePIDCommand(m_drivetrain, 30);
 
   }
   

@@ -11,19 +11,19 @@ import frc.robot.subsystems.ShooterSubsystem;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 
-public class SpinUpShooterCommand extends CommandBase {
+public class SpinUpShooterDistanceCommand extends CommandBase {
 
-  private PIDController upperPID;
-  private PIDController lowerPID;
+  //private PIDController upperPID;
+  //private PIDController lowerPID;
   //private SimpleMotorFeedforward feedforward;
-  double targetVelocity;
+  double distanceInches;
   ShooterSubsystem shooter;
 
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
-  public SpinUpShooterCommand(double targetVelocity, ShooterSubsystem shooter) {
-    lowerPID = new PIDController(Constants.ShooterConstants.kP, 0, 0);
-    upperPID = new PIDController(Constants.ShooterConstants.kP, 0, 0);
-    this.targetVelocity = targetVelocity;
+  public SpinUpShooterDistanceCommand(double distanceInches, ShooterSubsystem shooter) {
+    //lowerPID = new PIDController(Constants.ShooterConstants.kPLower, 0, 0);
+    //upperPID = new PIDController(Constants.ShooterConstants.kPUpper, 0, 0);
+    this.distanceInches = distanceInches;
     this.shooter = shooter;
     addRequirements(shooter);
   }
@@ -31,19 +31,19 @@ public class SpinUpShooterCommand extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-      System.out.println("SpinUpShooterCommand started!");
+      System.out.println("SpinUpShooterDistanceCommand started!");
   }
 
   @Override
   public void execute() {
-    shooter.setMotors(targetVelocity * Constants.ShooterConstants.feedforward + upperPID.calculate(shooter.getUpperShooterVelocity(), targetVelocity), targetVelocity * Constants.ShooterConstants.feedforward + lowerPID.calculate(shooter.getLowerShooterVelocity(), targetVelocity));
+    shooter.setMotors(distanceInches * Constants.ShooterConstants.distanceFeedforward);
     //shooter.setMotors(upperPID.calculate(shooter.getUpperShooterVelocity(), 9624), 0);
     //SmartDashboard.putNumber("PID Output shooter", lowerPID.calculate(shooter.getLowerShooterVelocity(), 9624));
   }
 
   @Override
   public void end(boolean interrupted) {
-    System.out.println("SpinUpShooterCommand ended!");
+    System.out.println("SpinUpShooterDistanceCommand ended!");
     shooter.setMotors(0);
   }
 

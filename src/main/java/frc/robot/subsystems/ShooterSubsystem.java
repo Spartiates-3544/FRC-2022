@@ -49,7 +49,7 @@ public class ShooterSubsystem extends SubsystemBase {
   }
 
   public double getAverageShooterVelocity() {
-   return ( upper.getSelectedSensorVelocity() + lower.getSelectedSensorVelocity() ) /2;
+   return ( upper.getSelectedSensorVelocity() + -lower.getSelectedSensorVelocity() ) /2;
   }
 
   public double getUpperShooterVelocity() {
@@ -57,6 +57,6 @@ public class ShooterSubsystem extends SubsystemBase {
   }
 
   public double getLowerShooterVelocity() {
-    return lower.getSelectedSensorVelocity();
+    return -lower.getSelectedSensorVelocity();
   }
 }

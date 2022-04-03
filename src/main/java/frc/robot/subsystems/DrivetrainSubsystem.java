@@ -76,7 +76,6 @@ public class DrivetrainSubsystem extends SubsystemBase {
       leftEncoder = new CANCoder(Constants.DriveConstants.LEFTENCODERPORT); 
       rightEncoder = new CANCoder(Constants.DriveConstants.RIGHTENCODERPORT); //TODO CHECK IF I NEED TO REVERSE THE SENSOR DIRECTION https://oldsite.ctr-electronics.com/downloads/api/java/html/classcom_1_1ctre_1_1phoenix_1_1sensors_1_1_c_a_n_coder_configuration.html
       odometry = new DifferentialDriveOdometry(gyro.getRotation2d());
-      feedforward = new SimpleMotorFeedforward(Constants.DriveConstants.kS, Constants.DriveConstants.kV, Constants.DriveConstants.kA);
       ramp = new SlewRateLimiter(Constants.DriveConstants.RAMPINGUNITSPERSECOND);
       m_field = new Field2d();
       SmartDashboard.putData("Field", m_field);

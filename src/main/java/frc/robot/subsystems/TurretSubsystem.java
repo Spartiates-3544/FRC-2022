@@ -5,30 +5,37 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
-import com.ctre.phoenix.motorcontrol.can.TalonFX;
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.motorcontrol.Talon;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
 
 public class TurretSubsystem extends SubsystemBase {
-  private TalonFX turret;
+  private WPI_TalonFX turret;
   private DigitalInput limit;
+  /*
   private PIDController limelightPid = new PIDController(Constants.TurretConstants.kP, Constants.TurretConstants.kI, Constants.TurretConstants.kD);
   private PIDController encoderPid = new PIDController(Constants.TurretConstants.kPEncoder, Constants.TurretConstants.kIEncoder, Constants.TurretConstants.kDEncoder);
   private double encoderValue;
+  */
 
   public TurretSubsystem() {
-    turret = new TalonFX(Constants.TurretConstants.TURRETMOTORPORT);
+    turret = new WPI_TalonFX(Constants.TurretConstants.TURRETMOTORPORT);
     turret.setSelectedSensorPosition(0.0); //-148 000 a 148 000
     limit = new DigitalInput(Constants.TurretConstants.LIMITCHANNEL);
-    encoderValue = turret.getSelectedSensorPosition();
+    turret.configForwardSoftLimitThreshold(Constants.TurretConstants.FWDLIMITTHRESHOLD, 0);
+    turret.configReverseSoftLimitThreshold(Constants.TurretConstants.REVERSELIMITTHRESHOLD, 0);
+    turret.configForwardSoftLimitEnable(true, 0);
+    turret.configReverseSoftLimitEnable(true, 0);
+    //encoderValue = turret.getSelectedSensorPosition();
     // encoderPid.enableContinuousInput(minimumInput, maximumInput);
-    encoderPid.disableContinuousInput();
+    //encoderPid.disableContinuousInput();
   }
 
   @Override
@@ -54,23 +61,8 @@ public class TurretSubsystem extends SubsystemBase {
   */
 
   public void setTurret(double pourcentage) {
-    if (pourcentage > 0) {
-        //Limit clockwise rotation from the motor
-        if (turret.getSelectedSensorPosition() <= Constants.TurretConstants.RightLimitTicks) {
-            turret.set(TalonFXControlMode.PercentOutput, MathUtil.clamp(pourcentage, 0, 1));
-        }
-        turret.set(TalonFXControlMode.PercentOutput, pourcentage);
-    }
-
-    if (pourcentage < 0) {
-        //Limit counterclockwise rotation from the motor
-        if (turret.getSelectedSensorPosition() >= Constants.TurretConstants.LeftLimitTicks) {
-            turret.set(TalonFXControlMode.PercentOutput, MathUtil.clamp(pourcentage, -1, 0));
-        }
-        turret.set(TalonFXControlMode.PercentOutput, pourcentage);
-    }
-
     turret.set(TalonFXControlMode.PercentOutput, pourcentage);
+    turret.feed();
   }
 
   public DigitalInput getLimitSwitch() {

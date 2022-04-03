@@ -24,10 +24,10 @@ public final class Constants {
         public static int RIGHTDRIVEPORT3 = 5;
         public static int LEFTENCODERPORT = 0;
         public static int RIGHTENCODERPORT = 1;
-        public static double RAMPINGUNITSPERSECOND = 1.2; //TODO TEST
-        public static double kS = 0.22;
-        public static double kV = 1.98;
-        public static double kA = 0.2;
+        public static double RAMPINGUNITSPERSECOND = 1.2;
+        public static double kP = 0.003;
+        public static double kI = 0;
+        public static double kD = 0;
         public static double kTrackwidthMeters = 0.4572;
         public static DifferentialDriveKinematics kDriveKinematics = new DifferentialDriveKinematics(kTrackwidthMeters); //TODO Set all of the above
         public static double kPDriveVel = 2; //TODO
@@ -44,6 +44,8 @@ public final class Constants {
         public static double kPUpper = 0.00070685;
         public static double kPLower = 0.00049724;
         public static double feedforward = 0.00005;
+        public static double distanceFeedforward;
+        public static double kP = 0.00002;
     }
 
     public final static class AutoConstants {
@@ -64,9 +66,11 @@ public final class Constants {
 
     //TODO
     public final static class TurretConstants {
+        public static final double FWDLIMITTHRESHOLD = 40000;
+        public static final double REVERSELIMITTHRESHOLD = -40000;
         public static int TURRETMOTORPORT = 8;
         public static int LIMITCHANNEL = 0;
-        public static double kP = 0.0001;
+        public static double kP = 0.02;
         public static double kI = 0;
         public static double kD = 0;
         public static double kPEncoder = 0.0001;
