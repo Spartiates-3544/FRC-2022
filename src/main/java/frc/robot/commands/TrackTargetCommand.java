@@ -16,7 +16,6 @@ public class TrackTargetCommand extends CommandBase {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
   private final TurretSubsystem turret;
   private final Limelight limelight;
-  private double steeringAdjust;
   private double horizontalOffset;
   private PIDController limelightPID;
 

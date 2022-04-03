@@ -4,19 +4,6 @@
 
 package frc.robot;
 
-import java.util.List;
-
-import com.pathplanner.lib.PathPlanner;
-
-import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.controller.RamseteController;
-import edu.wpi.first.math.controller.SimpleMotorFeedforward;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.trajectory.Trajectory;
-import edu.wpi.first.math.trajectory.TrajectoryConfig;
-import edu.wpi.first.math.trajectory.TrajectoryGenerator;
-import edu.wpi.first.math.trajectory.constraint.DifferentialDriveVoltageConstraint;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.XboxController.Button;
@@ -32,7 +19,6 @@ import frc.robot.commands.FeedBallsShooterCommand;
 import frc.robot.commands.IntakeCommand;
 import frc.robot.commands.RunIndexorCommand;
 import frc.robot.commands.SpinUpShooterCommand;
-import frc.robot.commands.ToggleIntakeCommand;
 import frc.robot.commands.TurnAngleCommand;
 import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.subsystems.IndexorSubsystem;

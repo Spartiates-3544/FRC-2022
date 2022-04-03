@@ -77,7 +77,6 @@ public final class Constants {
         public static double LeftLimitTicks = 0; //TODO
     }
 
-    //TODO
     public final static class IntakeConstants {
         public static int INTAKEMOTORPORT = 11; 
         public static int PCMPORT = 14;
