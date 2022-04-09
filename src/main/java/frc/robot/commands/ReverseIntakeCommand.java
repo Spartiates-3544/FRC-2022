@@ -12,7 +12,7 @@ import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 /** An example command that uses an example subsystem. */
-public class IntakeCommand extends CommandBase {
+public class ReverseIntakeCommand extends CommandBase {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
   private final IntakeSubsystem intake;
 
@@ -21,7 +21,7 @@ public class IntakeCommand extends CommandBase {
    *
    * @param subsystem The subsystem used by this command.
    */
-  public IntakeCommand(IntakeSubsystem intake) {
+  public ReverseIntakeCommand(IntakeSubsystem intake) {
     this.intake = intake;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(intake);
@@ -34,8 +34,8 @@ public class IntakeCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-      intake.deploy(DoubleSolenoid.Value.kForward);
-      intake.setIntake(Constants.IntakeConstants.INTAKESPEED);
+    intake.deploy(DoubleSolenoid.Value.kForward);
+    intake.setIntake(-Constants.IntakeConstants.INTAKESPEED);
   }
 
   // Called once the command ends or is interrupted.

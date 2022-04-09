@@ -31,7 +31,7 @@ public class RunIndexorCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    indexor.setPourcentage(0.5);
+    indexor.setPourcentage(0.25);
   }
 
   // Called once the command ends or is interrupted.

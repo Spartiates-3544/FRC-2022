@@ -22,7 +22,7 @@ public class IndexorSubsystem extends SubsystemBase {
   }
 
   public void setPourcentage(double pourcentage) {
-    indexor.set(ControlMode.PercentOutput, pourcentage);
+    indexor.set(pourcentage);
   }
 
   public void activate(boolean on) {

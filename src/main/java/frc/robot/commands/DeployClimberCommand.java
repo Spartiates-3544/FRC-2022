@@ -5,26 +5,17 @@
 package frc.robot.commands;
 
 import frc.robot.Constants;
+import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.subsystems.ExampleSubsystem;
-import frc.robot.subsystems.IntakeSubsystem;
-
-import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
-/** An example command that uses an example subsystem. */
-public class IntakeCommand extends CommandBase {
+public class DeployClimberCommand extends CommandBase {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
-  private final IntakeSubsystem intake;
+  private final ClimberSubsystem climber;
 
-  /**
-   * Creates a new ExampleCommand.
-   *
-   * @param subsystem The subsystem used by this command.
-   */
-  public IntakeCommand(IntakeSubsystem intake) {
-    this.intake = intake;
-    // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(intake);
+  public DeployClimberCommand(ClimberSubsystem climber) {
+    this.climber = climber;
+    addRequirements(climber);
   }
 
   // Called when the command is initially scheduled.
@@ -34,20 +25,21 @@ public class IntakeCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-      intake.deploy(DoubleSolenoid.Value.kForward);
-      intake.setIntake(Constants.IntakeConstants.INTAKESPEED);
+      climber.setClimber(1);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    intake.deploy(DoubleSolenoid.Value.kReverse);
-    intake.setIntake(0);
+      climber.setClimber(0);
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
+    if (climber.getRightEncoderPosition() >= Constants.ClimberConstants.RIGHTFWDLIMITTHRESHOLD) {
+        return true;
+    }
     return false;
   }
 }

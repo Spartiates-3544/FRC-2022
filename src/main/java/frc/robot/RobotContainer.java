@@ -5,6 +5,7 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.GenericHID;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.XboxController.Button;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -16,10 +17,18 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.DefaultDriveCommand;
+import frc.robot.commands.DeployClimberCommand;
 import frc.robot.commands.DriveStraightCommand;
+import frc.robot.commands.DriveStraightReverseCommand;
 import frc.robot.commands.FeedBallsShooterCommand;
 import frc.robot.commands.IntakeCommand;
+import frc.robot.commands.RetractClimberCommand;
+import frc.robot.commands.ReverseIntakeCommand;
+import frc.robot.commands.RunConveyorCommand;
+import frc.robot.commands.RunConveyorReverseCommand;
+import frc.robot.commands.RunIndexorColorCommand;
 import frc.robot.commands.RunIndexorCommand;
+import frc.robot.commands.RunIndexorProximityCommand;
 import frc.robot.commands.SpinIntakeCommand;
 import frc.robot.commands.SpinUpShooterCommand;
 import frc.robot.commands.SpinUpShooterDistanceCommand;
@@ -29,6 +38,8 @@ import frc.robot.commands.StopSpinningIntakeCommand;
 import frc.robot.commands.TrackTargetCommand;
 import frc.robot.commands.TurnAngleCommand;
 import frc.robot.commands.TurnAnglePIDCommand;
+import frc.robot.subsystems.ClimberSubsystem;
+import frc.robot.subsystems.ConveyorSubsystem;
 import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.subsystems.IndexorSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
@@ -50,6 +61,9 @@ public class RobotContainer {
   private final TurretSubsystem m_turret = new TurretSubsystem();
   private final LimelightSubsystem m_limelight = new LimelightSubsystem();
   private final XboxController m_controller = new XboxController(0);
+  private final Joystick m_joystick = new Joystick(1);
+  private final ClimberSubsystem m_climber = new ClimberSubsystem();
+  private final ConveyorSubsystem m_conveyor = new ConveyorSubsystem();
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -67,18 +81,24 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-    /*
-    new JoystickButton(m_controller, Button.kA.value).toggleWhenPressed(
-        new ParallelCommandGroup(new SpinUpShooterCommand(10, m_shooter), //TODO make the velocity decision automatic
-        new SequentialCommandGroup(new WaitCommand(2.5), new FeedBallsShooterCommand(m_indexor))), 
-        true);
-    */
-    new JoystickButton(m_controller, Button.kA.value).toggleWhenPressed(new TrackTargetCommand(m_turret), true);
-    new JoystickButton(m_controller, Button.kB.value).toggleWhenPressed(new SpinUpShooterCommand(12500, m_shooter), true);
-    new JoystickButton(m_controller, Button.kX.value).toggleWhenPressed(new RunIndexorCommand(m_indexor), true);
-    new JoystickButton(m_controller, Button.kY.value).toggleWhenPressed(new ParallelCommandGroup(new IntakeCommand(m_intake), new SpinUpShooterCommand(20000, m_shooter), new RunIndexorCommand(m_indexor)));
-    //new JoystickButton(m_controller, Button.kY.value).toggleWhenPressed(new IntakeCommand(m_intake));
+    //Track target enable
+    new JoystickButton(m_joystick, 2).toggleWhenPressed(new TrackTargetCommand(m_turret), true);
+    
+    //Pickup
+    new JoystickButton(m_joystick, 3).toggleWhenPressed(new ParallelCommandGroup(new IntakeCommand(m_intake), new RunConveyorCommand(m_conveyor), new RunIndexorColorCommand(m_indexor)));
 
+    //Reverse intake/conveyor
+    new JoystickButton(m_joystick, 6).toggleWhenPressed(new ParallelCommandGroup(new ReverseIntakeCommand(m_intake), new RunConveyorReverseCommand(m_conveyor)));
+
+    //Climber
+    new JoystickButton(m_controller, Button.kLeftBumper.value).whenPressed(new DeployClimberCommand(m_climber));
+    new JoystickButton(m_controller, Button.kRightBumper.value).whenPressed(new RetractClimberCommand(m_climber));
+
+    //Shoot
+    new JoystickButton(m_joystick, 1).toggleWhenPressed(new ParallelCommandGroup(new SpinUpShooterCommand(30000, m_shooter), new TrackTargetCommand(m_turret), new SequentialCommandGroup(new WaitCommand(4), new ParallelCommandGroup(new RunIndexorCommand(m_indexor), new RunConveyorCommand(m_conveyor)))));
+
+    //Run Indexor(1sec)
+    new JoystickButton(m_joystick, 5).whenPressed(new RunIndexorColorCommand(m_indexor).withTimeout(0.25));
   }
 
   /**
@@ -202,6 +222,7 @@ public class RobotContainer {
 
 
 
+
     // Sequance autonome pour Martin
     return new SequentialCommandGroup(//
             new ParallelCommandGroup(//
@@ -213,25 +234,30 @@ public class RobotContainer {
               )//
             ),//
             //new DriveStraightCommand(m_drivetrain, -1.5),//
-            new TurnAnglePIDCommand(m_drivetrain, -90).withTimeout(1),//
+            new TurnAnglePIDCommand(m_drivetrain, -190).withTimeout(1),//
             //new WaitCommand(0.5),//
             //new TurnAnglePIDCommand(m_drivetrain, -30),//
             new StartIntakeCommand(m_intake),//
             new ParallelCommandGroup(//
-              new DriveStraightCommand(m_drivetrain, 1.5),//
-              new SpinIntakeCommand(m_intake)).withTimeout(1),//
+              new DriveStraightCommand(m_drivetrain, 2.0),//
+              new SpinIntakeCommand(m_intake),
+              new RunConveyorCommand(m_conveyor),
+              new RunIndexorColorCommand(m_indexor)).withTimeout(4),//
             //new StopSpinningIntakeCommand(m_intake),//
             new StopIntakeCommand(m_intake),//
-            new TurnAnglePIDCommand(m_drivetrain, 90).withTimeout(1),//
+            new TurnAnglePIDCommand(m_drivetrain, 190).withTimeout(1),//
+            new DriveStraightCommand(m_drivetrain, 2),
             new ParallelCommandGroup(//
               new TrackTargetCommand(m_turret).withTimeout(0.5),//
-              new SpinUpShooterCommand(17000, m_shooter).withTimeout(5),//
+              new SpinUpShooterCommand(12500, m_shooter).withTimeout(5),//
               new SequentialCommandGroup(//
                 new WaitCommand(2.5),//
                 new RunIndexorCommand(m_indexor).withTimeout(2)//
               )//
             )//
     );
+
+    //return new SequentialCommandGroup(new DriveStraightReverseCommand(m_drivetrain, -2), new ParallelCommandGroup(new TrackTargetCommand(m_turret), new SpinUpShooterCommand(20000, m_shooter), new SequentialCommandGroup(new WaitCommand(4), new RunIndexorCommand(m_indexor))));
 
 
     

@@ -4,27 +4,25 @@
 
 package frc.robot.commands;
 
-import frc.robot.Constants;
-import frc.robot.subsystems.ExampleSubsystem;
-import frc.robot.subsystems.IntakeSubsystem;
+import java.util.regex.MatchResult;
 
-import edu.wpi.first.wpilibj.DoubleSolenoid;
+import com.revrobotics.ColorMatch;
+import com.revrobotics.ColorMatchResult;
+import frc.robot.util.RevColorSensor;
+
+import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.subsystems.IndexorSubsystem;
 
-/** An example command that uses an example subsystem. */
-public class IntakeCommand extends CommandBase {
+public class RunIndexorProximityCommand extends CommandBase {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
-  private final IntakeSubsystem intake;
+  private final IndexorSubsystem indexor;
+  private final RevColorSensor colorSensor;
 
-  /**
-   * Creates a new ExampleCommand.
-   *
-   * @param subsystem The subsystem used by this command.
-   */
-  public IntakeCommand(IntakeSubsystem intake) {
-    this.intake = intake;
-    // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(intake);
+  public RunIndexorProximityCommand(IndexorSubsystem indexor) {
+    this.indexor = indexor;
+    colorSensor = new RevColorSensor();
+    addRequirements(indexor);
   }
 
   // Called when the command is initially scheduled.
@@ -34,20 +32,21 @@ public class IntakeCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-      intake.deploy(DoubleSolenoid.Value.kForward);
-      intake.setIntake(Constants.IntakeConstants.INTAKESPEED);
+    indexor.setPourcentage(0.25);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    intake.deploy(DoubleSolenoid.Value.kReverse);
-    intake.setIntake(0);
+    indexor.setPourcentage(0);
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
+    if (colorSensor.getProximity() >= 1900) {
+        return true;
+    }
     return false;
   }
 }

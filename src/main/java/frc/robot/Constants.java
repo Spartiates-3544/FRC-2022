@@ -51,7 +51,8 @@ public final class Constants {
     public final static class AutoConstants {
         public static double kMaxSpeedMetersPerSecond = 5; //TODO
         public static double kMaxAccelerationMetersPerSecondSquared = 2; //TODO
-        public static double AUTOFWDSPEED = 0.20;
+        public static double AUTOFWDSPEED = 0.15;
+
         public static double AUTOTURNSPEED = 0.20;
         public static String trajectoryName = "test2"; //Change as needed 
         public static final double kRamseteB = 2;
@@ -82,7 +83,21 @@ public final class Constants {
     }
 
     public final static class IntakeConstants {
-        public static int INTAKEMOTORPORT = 11; 
+        public static double INTAKESPEED = -0.6;
+		public static int INTAKEMOTORPORT = 11; 
         public static int PCMPORT = 14;
+    }
+
+    public final static class ClimberConstants {
+        public static double RIGHTREVERSELIMITTHRESHOLD = 0;
+        public static double RIGHTFWDLIMITTHRESHOLD = 262000;
+        public static double LEFTREVERSELIMITTHRESHOLD = -262000;
+        public static double LEFTFWDLIMITTHRESHOLD = 0;
+        public static int LEFTCLIMBERPORT = 16;
+        public static int RIGHTCLIMBERPORT = 17;
+    }
+
+    public final static class ConveyorConstants {
+        public static int CONVEYORMOTORPORT = 15;
     }
 }

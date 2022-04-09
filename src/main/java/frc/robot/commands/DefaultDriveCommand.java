@@ -7,7 +7,6 @@ package frc.robot.commands;
 import frc.robot.Constants;
 import frc.robot.subsystems.DrivetrainSubsystem;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 /* Regular command for driving */
@@ -28,7 +27,7 @@ public class DefaultDriveCommand extends CommandBase {
   }
 
   @Override
-  public void execute() {   
+  public void execute() {  
         m_drivetrain.arcadeDrive(m_controller.getLeftY() * 0.8, (m_controller.getLeftTriggerAxis() - m_controller.getRightTriggerAxis()) * 0.8);
         /*
         var speeds = DifferentialDrive.arcadeDriveIK(m_controller.getLeftY(), m_controller.getLeftTriggerAxis() - m_controller.getRightTriggerAxis(), true);
